@@ -1,0 +1,156 @@
+---
+title: "Dynamic report"
+output: html_document
+params:
+  variant: NA
+---
+
+#Initial data
+
+Initial data consist in a set of `r dim(file)[1]`  genes and `r length(unique(file$QTL))`
+      qtl, distributed arround `r length(unique(file$Chr))` chromosomes (figures 1 and 2).
+
+The greatest number of genes in a qtl is  `r markdown_table_summary(file)[[2]][1]`, and the qtl is
+`r markdown_table_summary(file)[[2]][3]` from `r markdown_table_summary(file)[[2]][2]`. The greatest number of genes in a whole chromosome is `r markdown_table_summary(file)[[2]][4]` and the chromosome is `r markdown_table_summary(file)[[2]][6]` the previous, the `r markdown_table_summary(file)[[2]][5]` (Table 1).
+
+
+      
+```{r, chunk 1: initial table summary ,echo = FALSE}
+kable(markdown_table_summary(file)[1])
+
+```
+
+######Table 1: Initial summary of the full data. Columns show the different qtl of each Chr, the number of columns correspond to the maximum number of qtl in any of the chr plus one. The last column has to do with the total amount of genes in the chr (which is the summatory of all the qtl genes in that chr). Rows cointains on the one hand the name of the qtl of each chr and below this name, its value.
+
+```{r, chunk 2: initial table plot chr ,echo = FALSE}
+genes_remaining_plot(file)
+```
+
+######Figure 1: Total amount of initial genes distributed by chromosomes.
+
+
+```{r, chunk 3: initial table plot qtl ,echo = FALSE}
+genes_remaining_plot_qtl(file)
+```
+
+######Figure 2: Total amount of initial genes distributed by chromosomes and qtl.
+
+
+
+#Final data
+
+Final data consist in a set of `r dim(filtered_table)[1]`  genes and `r length(unique(filtered_table$QTL))`
+      qtl, distributed arround `r length(unique(filtered_table$Chr))` chromosomes (figures 3 and 4).
+      
+The greatest number of genes in a qtl is  `r markdown_table_summary(filtered_table)[[2]][1]`, and the qtl is
+`r markdown_table_summary(filtered_table)[[2]][3]` from `r markdown_table_summary(filtered_table)[[2]][2]`. The greatest number of genes in a whole chromosome is `r markdown_table_summary(filtered_table)[[2]][4]` and the chromosome is `r markdown_table_summary(filtered_table)[[2]][6]` the previous, the `r markdown_table_summary(filtered_table)[[2]][5]` (Table 2).
+
+
+      
+```{r, chunk 1: final table summary ,echo = FALSE}
+kable(markdown_table_summary(filtered_table)[1])
+
+```
+
+######Table 2: Final summary of the full data. Columns show the different qtl of each Chr, the number of columns correspond to the maximum number of qtl in any of the chr plus one. The last column has to do with the total amount of genes in the chr (which is the summatory of all the qtl genes in that chr). Rows cointains on the one hand the name of the qtl of each chr and below this name, its value.
+
+```{r, chunk 2: final table plot chr ,echo = FALSE}
+genes_remaining_plot(filtered_table)
+```
+
+######Figure 3: Total amount of final genes distributed by chromosomes.
+
+
+```{r, chunk 3: final table plot qtl ,echo = FALSE}
+genes_remaining_plot_qtl(filtered_table)
+```
+
+######Figure 4: Total amount of final genes distributed by chromosomes and qtl.      
+
+
+#Filtering
+
+The number of genes removed during filtering is `r dim(file)[1]-dim(filtered_table)[1]`.
+
+##Detailed filtering
+
+Although the filtering has been carried out sequentially, the following data is related to the cadidates that overcome the filter independently (See Filtering acording workflow to see it sequentially)
+
+###Expression
+
+After removing `r dim(file)[1]-dim(result_expression_independently)[1]` out of `r dim(file)[1]` genes for having a value below the threshold, `r dim(result_expression_independently)[1]` genes still remain.
+
+
+###Position
+
+After removing `r dim(file)[1]-dim(result_chromosome_independently)[1]` out of `r dim(file)[1]` genes for having unselected position, `r dim(result_chromosome_independently)[1]` genes still remain.
+
+###Annotation
+
+After removing `r dim(file)[1]-dim(result_annotation_independently)[1]` out of `r dim(file)[1]` genes for having unselected annotation, `r dim(result_annotation_independently)[1]` genes still remain.
+
+###Variant 
+
+We have selected `r params$variant` family of variants.
+
+After removing `r dim(file)[1]-dim(result_variant_independently)[1]` out of `r dim(file)[1]` genes for having unselected variants, `r dim(result_variant_independently)[1]` genes still remain.
+
+###Orthologs 
+
+
+After removing `r dim(file)[1]- dim(result_orthologs_independently)[1]` out of `r dim(file)[1]` genes for having unselected orthologs, `r dim(result_orthologs_independently)[1]` genes still remain.
+
+
+#Filtering acording workflow
+
+#Filtering
+
+The number of genes removed during filtering is `r dim(file)[1]-dim(filtered_table)[1]`.
+
+##Detailed filtering
+
+The filtering has been carried out sequentially, thus, the filters will be shown in the proper order, which implies that the initial genes of each filter are the filtered ones from the previous filter.
+
+###Expression
+
+After removing `r dim(file)[1]-dim(result_expression)[1]` out of `r dim(file)[1]` genes for having a value below the threshold, `r dim(result_expression)[1]` genes still remain.
+
+
+###Position
+
+After removing `r dim(result_expression)[1]-dim(result_chromosome)[1]` out of `r dim(result_expression)[1]` genes for having unselected position, `r dim(result_chromosome)[1]` genes still remain.
+
+###Annotation
+
+After removing `r dim(result_chromosome)[1]-dim(result_annotation)[1]` out of `r dim(result_chromosome)[1]` genes for having unselected annotation, `r dim(result_annotation)[1]` genes still remain.
+
+###Variant 
+
+We have selected `r params$variant` family of variants.
+
+After removing `r dim(result_annotation)[1]-dim(result_variant)[1]` out of `r dim(result_annotation)[1]` genes for having unselected variants, `r dim(result_variant)[1]` genes still remain.
+
+###Orthologs 
+
+
+After removing `r dim(result_variant)[1]- dim(result_orthologs)[1]` out of `r dim(result_variant)[1]` genes for having unselected orthologs, `r dim(result_orthologs)[1]` genes still remain.
+
+
+```{r, results="asis", echo = FALSE}
+files <- list.files(path = 'C:/Users/Daniel/Desktop/shimelony/www/images/', 
+                    pattern = '\\.png', full.names = T)
+for(f in files) cat(paste0('![](',f,')\n'))
+
+
+# files <- list.files(path = '/home/jortega/Desktop/Shimelony/www/images', 
+#                     pattern = '\\.png', full.names = T)
+# i <- 0
+# for(f in files){
+#   i <- i+1
+#   cat(paste0('![plot ',i,'](',f,')\n'))
+# }
+# cat(paste0('\n'))
+
+
+```
+
